@@ -11,15 +11,16 @@ The Forest Service is considering a proposal to place in conservancy a forest of
     ```
 
 - **Routes**:
-    Prefix Verb   URI Pattern                    Controller#Action
-    GET           /animals(.:format)             animals#index
-    POST          /animals(.:format)             animals#create
-    GET           /animals/new(.:format)         animals#new
-    GET           /animals/:id/edit(.:format)    animals#edit
-    GET           /animals/:id(.:format)         animals#show
-    PATCH         /animals/:id(.:format)         animals#update
-    PUT           /animals/:id(.:format)         animals#update
-    DELETE        /animals/:id(.:format)         animals#destro
+    |Prefix Verb|URI Pattern                |Controller#Action|
+    |-----------|---------------------------|-----------------|
+    |GET        |/animals(.:format)         |animals#index    |
+    |POST       |/animals(.:format)         |animals#create   |
+    |GET        |/animals/new(.:format)     |animals#new      |
+    |GET        |/animals/:id/edit(.:format)|animals#edit     |
+    |GET        |/animals/:id(.:format)     |animals#show     |
+    |PATCH      |/animals/:id(.:format)     |animals#update   |
+    |PUT        |/animals/:id(.:format)     |animals#update   |
+    |DELETE     |/animals/:id(.:format)     |animals#destro   |
 
 - **Story**:  As the consumer of the API I can see all the animals in the database.
    ```ruby
