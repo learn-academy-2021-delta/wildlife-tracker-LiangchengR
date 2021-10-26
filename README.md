@@ -20,7 +20,7 @@ The Forest Service is considering a proposal to place in conservancy a forest of
     |GET        |/animals/:id(.:format)     |animals#show     |
     |PATCH      |/animals/:id(.:format)     |animals#update   |
     |PUT        |/animals/:id(.:format)     |animals#update   |
-    |DELETE     |/animals/:id(.:format)     |animals#destro   |
+    |DELETE     |/animals/:id(.:format)     |animals#destroy  |
 
 - **Story**:  As the consumer of the API I can see all the animals in the database.
    ```ruby
@@ -61,29 +61,67 @@ The Forest Service is considering a proposal to place in conservancy a forest of
 - **Story**:  As the consumer of the API I can create a sighting of an animal with date (use the *datetime* datatype), a latitude, and a longitude.
   - *Hint*:  An animal has_many sightings.  (rails g resource Sighting animal_id:integer ...)
   ```ruby
+  Animal Class > has_many :sightings
+  Sighting Class > belongs_to :animal
+
   rails g resource Sighting animal_id:integer date:datetime latitude:float longitude:float  
   rails db:migrate
 
   Sighting.create animal_id: 2 , date: DateTime.now, latitude: -37.76850, longitude: 123.38060
+  Sighting.create animal_id: 2 , date: DateTime.now, latitude: -17.79170, longitude: -155.25405
+  Sighting.create animal_id: 4 , date: DateTime.now, latitude: 43.42395, longitude: -97.01475
+  Sighting.create animal_id: 1 , date: DateTime.now, latitude: 24.32034, longitude: 99.83660
+
+  <!-- where new(YYYY,MM,DD,HR,MN,SECONDS) -->
+  Sighting.create animal_id: 4 , date: DateTime.new(2000,1,2,3,4,5), latitude: 1.0, longitude: 5.0
+  Sighting.create animal_id: 4 , date: DateTime.new(2000,1,2,3,4,5), latitude: 2.0, longitude: 6.0
+  Sighting.create animal_id: 4 , date: DateTime.new(2000,1,2,3,4,5), latitude: 2.0, longitude: 6.0
+  Sighting.create animal_id: 1 , date: DateTime.new(1994,1,2,3,4,5), latitude: 4.0, longitude: 8.0
   ```
 
 - **Story**:  As the consumer of the API I can update an animal sighting in the database.
+  - updating sightings id 1 and 3 to blue whale id which is 5
+  ```ruby
+  Sighting.create animal_id: 2 , date: DateTime.now, latitude: -37.76850, longitude: 123.38060
+  Sighting.create animal_id: 2 , date: DateTime.now, latitude: -17.79170, longitude: -155.25405
+  ```
+
 - **Story**:  As the consumer of the API I can destroy an animal sighting in the database.
+  - deleted one of the blue whale sightings id 1
+
 - **Story**:  As the consumer of the API, when I view a specific animal, I can also see a list sightings of that animal.
   - *Hint*: Checkout the [ Ruby on Rails API docs ](https://api.rubyonrails.org/classes/ActiveModel/Serializers/JSON.html#method-i-as_json) on how to include associations.
+  - Had trouble using Rails API Docs, found other formatting for association inclusion:
+  - (https://medium.com/@jodipruett/render-json-include-multiple-activerecord-associations-75f72ada3c26)
+  ```ruby
+    def index
+        animals = Animal.all
+        render json: animals, include: [:sightings]
+    end
+
+    (nested)
+    def index
+        objects = Class.all
+        render json: objects, include: [:assoc1 => {:include => :nested_assoc}]
+    end
+  ```
+
 - **Story**:  As the consumer of the API, I can run a report to list all sightings during a given time period.
-  - *Hint*: Your controller can look like this:
-```ruby
-class SightingsController < ApplicationController
-  def index
-    sightings = Sighting.where(date: params[:start_date]..params[:end_date])
-    render json: sightings
-  end
-end
-```
+  - Postman is a client. Querying requires two steps
+  - 1) adjustment of the controller and strong params to include start_date and end_date
+  
+    ```ruby
+    class SightingsController < ApplicationController
+      def index
+        sightings = Sighting.where(date: params[:start_date]..params[:end_date])
+        render json: sightings
+      end
+    end
+    ```
+  - 2) passing of parameters in postman: localhost:3000/sightings?start_date=1994-01-02T03:04:05.000Z&end_date=2000-01-02T03:04:05.000Z
+    - where you create query params keys: start_date and end_date and specify the values or range you want
 
-Remember to add the start_date and end_date to what is permitted in your strong parameters method.
-
+  
 ## Stretch Challenges
 **Note**:  All of these stories should include the proper RSpec tests. Validations will require specs in `spec/models`, and the controller method will require specs in `spec/requests`.
 

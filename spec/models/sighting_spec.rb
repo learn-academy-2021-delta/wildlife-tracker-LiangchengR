@@ -1,5 +1,5 @@
 require 'rails_helper'
 
-RSpec.describe Animal, type: :model do
+RSpec.describe Sighting, type: :model do
   pending "add some examples to (or delete) #{__FILE__}"
 end
